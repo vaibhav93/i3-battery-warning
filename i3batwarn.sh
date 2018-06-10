@@ -52,19 +52,22 @@ ACPI_PATH="/sys/class/power_supply/$BATTERY"
 STAT=$(cat $ACPI_PATH/status)
 
 # get remaining energy value
-REM=`grep "POWER_SUPPLY_CHARGE_NOW" $ACPI_PATH/uevent | cut -d= -f2`
+REM=`grep "POWER_SUPPLY_ENERGY_NOW" $ACPI_PATH/uevent | cut -d= -f2`
 
 # get full energy value
-FULL=`grep "POWER_SUPPLY_CHARGE_FULL_DESIGN" $ACPI_PATH/uevent | cut -d= -f2`
+FULL=`grep "POWER_SUPPLY_ENERGY_FULL_DESIGN" $ACPI_PATH/uevent | cut -d= -f2`
 
 # get current energy value in percent
-PERCENT=`echo $(( $REM * 100 / $FULL ))`
 
+#PERCENT=`echo $($REM / $FULL)`
+PERCENT=$((REM * 100 / FULL))
+echo $PERCENT
+#echo $FULL
 # set error message
-MESSAGE="AWW SNAP! I am running out of juice ...  Please, charge me or I'll have to power down."
+MESSAGE="AWW SNAP! Please, charge me or I'll have to power down."
 
 # set energy limit in percent, where warning should be displayed
-LIMIT="10"
+LIMIT="20"
 
 # show warning if energy limit in percent is less then user set limit and
 # if battery is discharging
